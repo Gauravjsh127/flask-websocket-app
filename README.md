@@ -1,7 +1,7 @@
 # Socket-flask app
 
 
-Sample websocket flask app connect to FE app.
+Sample websocket flask app connect.
 
 
 Start the application with:
