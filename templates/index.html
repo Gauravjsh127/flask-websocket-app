@@ -6,16 +6,20 @@
     <script type="text/javascript">
 	$(document).ready(function(){
 		//connect to the socket server./// change the port acordingly
-		var socket_alert = io.connect('http://54.93.73.162:' + 5001 + '/alerts');  
-		//receive details from server
-		var alerts_received = [];
+		var URL = 'http://54.93.73.162:';
+		var localURL = 'http://127.0.0.1:';
+
+		var socket_alert = io.connect(URL + 5001 + '/alerts');  
+		var alerts_received = []; //receive details from server
+		var alert_num =1;
+
 		socket_alert.on('data', function(data) {
 			console.log("New Alert recieved ");
 			//maintain a list of ten numbers
-			if (alerts_received.length >= 10){
+			if (alerts_received.length >= 5){
 				alerts_received.shift()
 			}    
-			var newAlert = '<p> *********** New Alert Recieved  *********** <p>';
+			var newAlert = '<p> *********** New Alert Recieved :'+alert_num+' *********** <p>';
 			newAlert += '<p> AlertId : ' + data.alertId + '<p>';
 			newAlert += '<p> assetId : ' + data.assetId + '<p>';
 			newAlert += '<p> condtionId : ' + data.condtionId + '<p>';
@@ -27,35 +31,84 @@
 			newAlert += '<p> lastUpdatedTime : ' + data.lastUpdatedTime + '<p>';
 
 			alerts_received.push(newAlert);
+
+			alert_num +=1;
 			Alerts = '';
-			for (var i = 0; i < alerts_received.length; i++){
+			for (var i = alerts_received.length -1; i >=0;  i--){
 				Alerts += alerts_received[i]+ '<p>';
 			}
-
-			document.getElementById("log").innerHTML= Alerts
+			document.getElementById("Alerts").innerHTML= Alerts
 		});
 
+		var event_num = 1;
+		var socket_events = io.connect(URL + 5000 + '/assetlivedata');  
+		var events_received = []; //receive details from server
+		socket_events.on('data', function(data) {
+			console.log("New event recieved ");
+			//maintain a list of ten numbers
+			if (events_received.length >= 12){
+				events_received.shift()
+			}    
+			var newEventData = '<p> *********** New Event Recieved : '+event_num+' ***********'+' <p>';
+			newEventData += '<p> assetId : ' + data.assetId + '<p>';
+			newEventData += '<p> timeseriesId : ' + data.timeseriesId + '<p>';
+			newEventData += '<p> timeStamp : ' + data.timeStamp + '<p>';
+			newEventData += '<p> value : ' + data.value + '<p>';
+
+			events_received.push(newEventData);
+
+			event_num +=1;
+			EventData = '';
+			for (var i = events_received.length -1; i >=0;  i--){
+				EventData += events_received[i]+ '<p>';
+			}
+			document.getElementById("Events").innerHTML= EventData
+		});
 	});
 	</script>
 
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
+
+<style>
+	.button {
+	  background-color: #4CAF50; /* Green */
+	  border: none;
+	  color: white;
+	  padding: 15px 32px;
+	  text-align: center;
+	  text-decoration: none;
+	  display: inline-block;
+	  font-size: 16px;
+	  margin: 4px 2px;
+	  cursor: pointer;
+	}
+	.button-red {background-color: #f44336;} /* Red */ 
+	</style>
+
 <body>
 <div class="container">
   <div class="jumbotron">
-    <h2>DOP data recieved, asynchronously:  Gaurav</h2>
+	<h2>DOP data recieved, asynchronously:  Gaurav</h2>
   </div>
-</div>
-</div>
-
 <div class="container" id="content">
     <div class="row">
-        <h3>Alerts Info recieved [Latest one is in the Bottom] </h3>
-        <div id="log">
-        </div> <!-- /#log -->
+		<h3>Alerts Info recieved [Latest one on top] </h3>
+		<div>
+			<button id="Enable-Alert" class="button" type="button">Enable Alert-Websockets!</button>
+			<button id="Disable-Alert" class="button button-red" type="button">Disconnect Alert-Websockets!</button>
+		</div>
+        <div id="Alerts">
+	   </div> <!-- /#log -->
+	   <h3>Events data recieved [Latest one on top] </h3>
+	   <div>
+		<button id="Enable-Event" class="button" type="button">Enable Events-Websockets!</button>
+		<button id="Disable-Event" class="button button-red" type="button">Disconnect Events-Websockets!</button>
+	  </div>
+	   <div id="Events">
+	  </div> <!-- /#log -->
     </div>
 </div>
-
 
 </body>
 </html>
