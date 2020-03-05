@@ -7,7 +7,7 @@
 	$(document).ready(function(){
 		//connect to the socket server./// change the port acordingly
 		var URL = 'http://54.93.73.162:';
-		var localURL = 'http://127.0.0.1:';
+		//URL = 'http://127.0.0.1:';
 
 		var socket_alert = io.connect(URL + 5001 + '/alerts');  
 		var alerts_received = []; //receive details from server
@@ -22,7 +22,7 @@
 			var newAlert = '<p> *********** New Alert Recieved :'+alert_num+' *********** <p>';
 			newAlert += '<p> AlertId : ' + data.alertId + '<p>';
 			newAlert += '<p> assetId : ' + data.assetId + '<p>';
-			newAlert += '<p> condtionId : ' + data.condtionId + '<p>';
+			newAlert += '<p> conditionId : ' + data.conditionId + '<p>';
 			newAlert += '<p> jobId : ' + data.jobId + '<p>';
 			newAlert += '<p> status : ' + data.status + '<p>';
 			newAlert += '<p> alertLevel : ' + data.alertLevel + '<p>';
