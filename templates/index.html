@@ -6,22 +6,23 @@
     <script type="text/javascript">
 	$(document).ready(function(){
 		//connect to the socket server./// change the port acordingly
-		var URL = 'http://54.93.73.162:';
+		var URL = 'http://3.127.132.186:';
 		//URL = 'http://127.0.0.1:';
 
 		var socket_alert = io.connect(URL + 5001 + '/alerts');  
 		var alerts_received = []; //receive details from server
 		var alert_num =1;
 
-		socket_alert.on('data', function(data) {
+		socket_alert.on('statusUpdate', function(data) {
 			console.log("New Alert recieved ");
 			//maintain a list of ten numbers
 			if (alerts_received.length >= 5){
 				alerts_received.shift()
-			}    
+			}   
+
 			var newAlert = '<p> *********** New Alert Recieved :'+alert_num+' *********** <p>';
 			newAlert += '<p> AlertId : ' + data.alertId + '<p>';
-			newAlert += '<p> assetId : ' + data.assetId + '<p>';
+			newAlert += '<p> internalAssetId : ' + data.internalAssetId + '<p>';
 			newAlert += '<p> conditionId : ' + data.conditionId + '<p>';
 			newAlert += '<p> jobId : ' + data.jobId + '<p>';
 			newAlert += '<p> status : ' + data.status + '<p>';
@@ -41,20 +42,20 @@
 		});
 
 		var event_num = 1;
-		var socket_events = io.connect(URL + 5000 + '/assetlivedata');  
+		var socket_events = io.connect(URL + 5000 + '/assets');  
 		var events_received = []; //receive details from server
-		socket_events.on('data', function(data) {
+		socket_events.on('timeseriesdata', function(data) {
 			console.log("New event recieved ");
 			//maintain a list of ten numbers
 			if (events_received.length >= 12){
 				events_received.shift()
 			}    
 			var newEventData = '<p> *********** New Event Recieved : '+event_num+' ***********'+' <p>';
-			newEventData += '<p> assetId : ' + data.assetId + '<p>';
-			newEventData += '<p> timeseriesId : ' + data.timeseriesId + '<p>';
-			newEventData += '<p> timeStamp : ' + data.timeStamp + '<p>';
-			newEventData += '<p> value : ' + data.value + '<p>';
-
+			newEventData += '<p> internalAssetId       : ' + data.internalAssetId + '<p>';
+			newEventData += '<p> pressureIn  value     : ' + data.pressureIn.value + ' timeStamp : ' + data.pressureIn.timeStamp + '<p>';
+			newEventData += '<p> temperatureIn  value  : ' + data.temperatureIn.value + ' timeStamp : ' + data.temperatureIn.timeStamp + '<p>';
+			newEventData += '<p> temperatureOut  value : ' + data.temperatureOut.value + ' timeStamp : ' + data.temperatureOut.timeStamp + '<p>';
+			newEventData += '<p> flowRate  value       : ' + data.flowRate.value + ' timeStamp : ' + data.flowRate.timeStamp + '<p>';
 			events_received.push(newEventData);
 
 			event_num +=1;
