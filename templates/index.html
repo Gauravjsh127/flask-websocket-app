@@ -7,7 +7,7 @@
 	$(document).ready(function(){
 		//connect to the socket server./// change the port acordingly
 		var URL = 'http://3.127.132.186:';
-		//URL = 'http://127.0.0.1:';
+		URL = 'http://127.0.0.1:';
 
 		var socket_alert = io.connect(URL + 5001 + '/alerts');  
 		var alerts_received = []; //receive details from server
@@ -28,9 +28,12 @@
 			newAlert += '<p> status : ' + data.status + '<p>';
 			newAlert += '<p> alertLevel : ' + data.alertLevel + '<p>';
 			newAlert += '<p> alertCategory : ' + data.alertCategory + '<p>';
-			newAlert += '<p> createdTime : ' + data.createdTime + '<p>';
+			newAlert += '<p> alertDescription : ' + data.alertDescription + '<p>';
+			newAlert += '<p> alertNotes : ' + data.alertNotes + '<p>';
+			newAlert += '<p> alertCreatedTime : ' + data.alertCreatedTime + '<p>';
+			newAlert += '<p> jobCreatedTime : ' + data.jobCreatedTime + '<p>';
+			newAlert += '<p> jobEndTime : ' + data.jobEndTime + '<p>';
 			newAlert += '<p> lastUpdatedTime : ' + data.lastUpdatedTime + '<p>';
-
 			alerts_received.push(newAlert);
 
 			alert_num +=1;
@@ -44,8 +47,8 @@
 		var event_num = 1;
 		var socket_events = io.connect(URL + 5000 + '/assets');  
 		var events_received = []; //receive details from server
-		socket_events.on('timeseriesdata', function(data) {
-			console.log("New event recieved ");
+		socket_events.on('7', function(data) {
+			console.log("New event recieved asset 1");
 			//maintain a list of ten numbers
 			if (events_received.length >= 12){
 				events_received.shift()
@@ -55,6 +58,7 @@
 			newEventData += '<p> pressureIn  value     : ' + data.pressureIn.value + ' timeStamp : ' + data.pressureIn.timeStamp + '<p>';
 			newEventData += '<p> temperatureIn  value  : ' + data.temperatureIn.value + ' timeStamp : ' + data.temperatureIn.timeStamp + '<p>';
 			newEventData += '<p> temperatureOut  value : ' + data.temperatureOut.value + ' timeStamp : ' + data.temperatureOut.timeStamp + '<p>';
+			newEventData += '<p> temperatureDiff  value : ' + data.temperatureDiff.value + ' timeStamp : ' + data.temperatureDiff.timeStamp + '<p>';
 			newEventData += '<p> flowRate  value       : ' + data.flowRate.value + ' timeStamp : ' + data.flowRate.timeStamp + '<p>';
 			events_received.push(newEventData);
 
